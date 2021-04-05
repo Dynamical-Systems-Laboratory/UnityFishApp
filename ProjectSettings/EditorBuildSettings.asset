@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 0
+    path: Assets/Scenes/stage selection.unity
+    guid: ae2902f14861a9f40b710020b4721a84
+  - enabled: 1
+    path: Assets/Scenes/stage selection_v2.unity
+    guid: 0d5d99772c37c2048bba5e916f45419c
+  - enabled: 1
+    path: Assets/Scenes/fish_in_water.unity
+    guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: Assets/Scenes/tutorial.unity
+    guid: 3c3652843766cb444ad4f7409b153466
+  m_configObjects: {}
