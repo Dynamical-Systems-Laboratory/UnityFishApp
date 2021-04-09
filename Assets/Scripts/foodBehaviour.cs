@@ -33,6 +33,10 @@ public class foodBehaviour : MonoBehaviour
     public float xo;
     public float yo;
     public float x_limit;
+    private float UR_x;
+    private float UR_y;
+    private float x1;
+    private float y1;
 
     //Constants
     //These will all get set by Manager when it gets initialized.
@@ -40,6 +44,11 @@ public class foodBehaviour : MonoBehaviour
     public float b; //maximum flow (at the center of the parabola), positive for water flow to the right, negative for water flow to the left
     public float y_boundary; //river bank  range is between y = -y_boundary and y = y_boundary 
     public float flowVariable;
+
+    private float rockRadius = 2.6f;
+    public float xa = -5f;
+    public float ya = 0f;
+
 
     //debug
     public float velocityx;
@@ -60,14 +69,16 @@ public class foodBehaviour : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        /*
         rb = GetComponent<Rigidbody2D>();
         rb.AddForce(new Vector2(-100.0f, 0f));
-
+        */
     }
 
     // Update is called once per frame
     void Update()
     {
+
 
         if (GameTime.isPaused){
             rb.velocity = new Vector2(0,0);
@@ -80,12 +91,21 @@ public class foodBehaviour : MonoBehaviour
         }
 
         //get position at curr frame
-        xo = rb.position.x;
-        yo = rb.position.y;
+        xo = transform.position.x;
+        yo = transform.position.y;
+
+//Testing for alternative rock implementation
+
+        //xa, ya are positions of the rock, r is radius of the rock
+        UR_x =  -1*(Mathf.Pow(rockRadius,2))*(Mathf.Pow((xo-xa),2)-Mathf.Pow((yo-ya),2)) / Mathf.Pow((Mathf.Pow((xo-xa),2)+Mathf.Pow((yo-ya),2)),2);
+        UR_y =  2*(Mathf.Pow(rockRadius,2))*((xo-xa)*(yo-ya)) / Mathf.Pow((Mathf.Pow((xo-xa),2)+Mathf.Pow((yo-ya),2)),2);
+
+        x1 = xo + getU(yo,Manager.instance.a,Manager.instance.b,Manager.instance.flow_variable) * GameTime.deltaTime + UR_x * GameTime.deltaTime; 
+        y1 = yo + UR_y * GameTime.deltaTime; 
 
         
-
-        
+        transform.position = new Vector2(x1,y1);
+        /*
         //vertical boundary, fish flows horizontally when they go into the riverbanks
         if (yo >= y_boundary - 2)
         {
@@ -109,7 +129,7 @@ public class foodBehaviour : MonoBehaviour
             rb.AddForce(new Vector2(1.0f,1.0f));
         }
 
-
+        */
 
 
     }
@@ -117,6 +137,12 @@ public class foodBehaviour : MonoBehaviour
     
     private void OnTriggerEnter2D(Collider2D other)
     {
+        
+        if (other.tag == "ObstacleProximity"){ //if item is within proximity with a rock, record down the location of that rock
+            xa = other.transform.position.x;
+            ya = other.transform.position.y;
+        }
+
         Debug.Log("Hit Detected by pellet.");
         
 
