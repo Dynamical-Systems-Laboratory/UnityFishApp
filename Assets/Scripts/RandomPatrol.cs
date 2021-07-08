@@ -54,7 +54,7 @@ public class RandomPatrol : MonoBehaviour
     public float maxFood = 100f; //max amount of food, constant, loads on start
    
     public float foodPenaltyAmount = 15f; //amount of food reduced everytime we hit a predator
-    public float foodRewardAmount = 2f; //amount of food rewarded when you eat food
+    public float foodRewardAmount = 7f; //amount of food rewarded when you eat food
     public float eggRewardAmount = 10f; //amount of food rewarded when you lay eggs
     public float food; //current amount of food, variable
 
@@ -135,9 +135,9 @@ public class RandomPatrol : MonoBehaviour
          QualitySettings.vSyncCount = 0;
          Application.targetFrameRate = target;
 
-        foodPenaltyAmount = 10f; //amount of food reduced everytime we hit a predator
-        foodRewardAmount = 4f; //amount of food rewarded when you eat food
-        eggRewardAmount = 12f; //amount of food rewarded when you lay eggs
+        foodPenaltyAmount = 15f; //amount of food reduced everytime we hit a predator
+        foodRewardAmount = 6f; //amount of food rewarded when you eat food
+        eggRewardAmount = 13f; //amount of food rewarded when you lay eggs
      }
 
 

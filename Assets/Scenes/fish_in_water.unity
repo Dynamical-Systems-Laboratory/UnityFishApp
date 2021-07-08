@@ -3858,8 +3858,8 @@ MonoBehaviour:
   eggAnimator: {fileID: 0}
   foodBar: {fileID: 1718736859}
   maxFood: 100
-  foodPenaltyAmount: 10
-  foodRewardAmount: 10
+  foodPenaltyAmount: 15
+  foodRewardAmount: 7
   eggRewardAmount: 25
   food: 0
   xo: 0
@@ -4058,7 +4058,7 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: -2.188035, y: 0.19340897}
+    - - {x: -1.4110616, y: 0.1527829}
       - {x: 0.09217811, y: 0.045116037}
       - {x: 0.5140142, y: -0.0010204315}
       - {x: 1.4789982, y: -0.069770694}
@@ -4069,7 +4069,7 @@ PolygonCollider2D:
       - {x: 1.8917036, y: 0.5875118}
       - {x: 0.6316248, y: 0.5147318}
       - {x: 0.21080637, y: 0.5117888}
-      - {x: -2.2673533, y: 0.2998427}
+      - {x: -1.404049, y: 0.36586}
 --- !u!1 &823432251
 GameObject:
   m_ObjectHideFlags: 0
@@ -9212,7 +9212,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1989825039}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -8.85, y: 0, z: 0}
+  m_LocalPosition: {x: -8, y: 0, z: 0}
   m_LocalScale: {x: 0.2466905, y: 0.2466905, z: 0.2466905}
   m_Children:
   - {fileID: 1022577495}
@@ -9242,7 +9242,6 @@ MonoBehaviour:
   attackYRef: 0
   attackThetaRef: 0
   l: 0.5
-  vk: 6
   tau: 1
   kp: 3
   fishOffset: 9
@@ -9261,6 +9260,8 @@ MonoBehaviour:
   flowVariable: 0
   p_atk: 0
   target: 30
+  xa: -100
+  ya: 0
 --- !u!95 &1989825042
 Animator:
   serializedVersion: 3
@@ -9975,12 +9976,12 @@ PrefabInstance:
     - target: {fileID: 7018074195922855929, guid: b407bb020939df74c9a68bbcfa50b5db,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 14.78
+      value: 18.15
       objectReference: {fileID: 0}
     - target: {fileID: 7018074195922855929, guid: b407bb020939df74c9a68bbcfa50b5db,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.24
+      value: -1.61
       objectReference: {fileID: 0}
     - target: {fileID: 7018074195922855929, guid: b407bb020939df74c9a68bbcfa50b5db,
         type: 3}

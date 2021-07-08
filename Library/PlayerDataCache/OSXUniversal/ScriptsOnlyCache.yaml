@@ -70,8 +70,10 @@ ScriptsOnlyBuild:
     UnityEditor.Graphs.dll:
     - UnityEditor.Graphs.AnimationBlendTree.Graph
     - UnityEditor.Graphs.AnimationBlendTree.GraphGUI
+    - UnityEditor.Graphs.AnimationStateMachine.AnyStateNode
     - UnityEditor.Graphs.AnimationStateMachine.Graph
     - UnityEditor.Graphs.AnimationStateMachine.GraphGUI
+    - UnityEditor.Graphs.AnimationStateMachine.StateNode
     - UnityEditor.Graphs.AnimatorControllerTool
     UnityEditor.TestRunner.dll:
     - UnityEditor.TestTools.TestRunner.Api.CallbacksHolder
@@ -138,6 +140,8 @@ ScriptsOnlyBuild:
     - Class: 91
       Script: {instanceID: 0}
     - Class: 95
+      Script: {instanceID: 0}
+    - Class: 96
       Script: {instanceID: 0}
     - Class: 104
       Script: {instanceID: 0}
@@ -393,6 +397,8 @@ ScriptsOnlyBuild:
       Script: {instanceID: 0}
     - Class: 95
       Script: {instanceID: 0}
+    - Class: 96
+      Script: {instanceID: 0}
     - Class: 104
       Script: {instanceID: 0}
     - Class: 108
@@ -441,6 +447,8 @@ ScriptsOnlyBuild:
       Script: {instanceID: 15334}
     - Class: 114
       Script: {instanceID: 15876}
+    - Class: 114
+      Script: {instanceID: 15952}
     - Class: 114
       Script: {instanceID: 15970}
     - Class: 114
@@ -1130,7 +1138,7 @@ ScriptsOnlyBuild:
     className: UniversalAdditionalLightData
   - hash:
       serializedVersion: 2
-      Hash: 976c70e72d7cc73fcb39eb6a1112a013
+      Hash: fe78ceecb45f826e647382fc8394a4fe
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: predatorBehaviour
@@ -1214,7 +1222,7 @@ ScriptsOnlyBuild:
     className: Physics2DRaycaster
   - hash:
       serializedVersion: 2
-      Hash: 3c2599bab9a94fe37919ade4703aaa59
+      Hash: ed61efe4d39233e11d6eab9e7995a62c
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: select_stage_v2
@@ -1400,7 +1408,7 @@ ScriptsOnlyBuild:
     className: TMP_StyleSheet
   - hash:
       serializedVersion: 2
-      Hash: 07de53cad615325fbeeeee264b16927c
+      Hash: 93e614a0e2f34086c1fe6bac75877984
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: foodBehaviour
@@ -1661,4 +1669,4 @@ ScriptsOnlyBuild:
   - Assets/Scenes/stage selection_v2.unity
   - Assets/Scenes/fish_in_water.unity
   - Assets/Scenes/tutorial.unity
-  playerPath: C:/Users/Tim Chen/Documents/Tim's Stuff/NYU/Work/DSL/Unity/Random_motion_yes/builds/mac/macBuilds_fin.app
+  playerPath: C:/Users/Tim Chen/Documents/Tim's Stuff/NYU/Work/DSL/Unity/Random_motion_yes/builds/mac/macBuilds_april16_fin.app

@@ -75,13 +75,14 @@ public class predatorBehaviour : MonoBehaviour
     private float b = 2f; //maximum flow (at the center of the parabola), positive for water flow to the right, negative for water flow to the left
     private float y_boundary = 12f; //river bank  range is between y = -y_boundary and y = y_boundary 
 
-    public float l = 0.5f; //thickness of the zebrafish in cm
-    public float vk = 6.0f; //speed of the fish, constant
+    public float l = 0.5f; //thickness of the zebrafish in cm NOT IN USE
+    public float vk; //speed of the predator, default is declared in vDefault below. 
+    private const float vDefault = 6.0f;
 
-    public float tau = 1f; 
+    public float tau = 1f; //NOT IN USE
     public float kp = 3f; //coupling strength for diffusive coupling
-    public float fishOffset = 10f; //offset between the fishes
-    public float fishOffsetDefault = 10f; //how much distance by default
+    public float fishOffset = 9f; //offset between the fishes
+    public float fishOffsetDefault = 9f; //how much distance by default
     
     public float speedOfAtk = 5.0f;
     public float speedOfBck = 2.0f;
@@ -110,6 +111,7 @@ public class predatorBehaviour : MonoBehaviour
     public int dealtDmg = 0;
 
     //retreat flag is when the attack sequence lasts for more than x seconds 
+    private IEnumerator coroutine;
     public bool retreat_flag = false;
 
     //These two are set from manager at the start()
@@ -136,6 +138,16 @@ public class predatorBehaviour : MonoBehaviour
     private bool turnDown;
     private bool turnUp;
 
+    //OBSTACLE AVOIDANCE THROUGH MODELING
+    private float rockRadius = 2.6f;
+    public float xa = -100f;
+    public float ya = 0f;
+    private float t2;
+    private float t3;
+    private float tt3;
+    private float UR_x;
+    private float UR_y;
+    private bool kp_vanish = false;
     
     private IEnumerator avoidRockDown(float secs)
     {
@@ -160,6 +172,7 @@ public class predatorBehaviour : MonoBehaviour
     private IEnumerator atk_timer(float secs){
         yield return new WaitForSeconds(secs);
         retreat_flag = true;
+        Debug.Log("PREDATOR SCRIPT: countdown ended, now retreating");
     }
 
 
@@ -195,6 +208,8 @@ public class predatorBehaviour : MonoBehaviour
         b = manager.b;
         y_boundary = manager.y_boundary;
 
+        vk = vDefault;
+
     }
 
     // Update is called once per frame
@@ -213,7 +228,14 @@ public class predatorBehaviour : MonoBehaviour
         xo = predatorPos.x;
         yo = predatorPos.y;
 
-        
+        //angle adjustment prep
+        Vector2 pred_2_fish_vect = new Vector2 (targetFish.position.x - xo, targetFish.position.y - yo);
+        Vector2 horizontal_vect = new Vector2 (1,0); //unit vector on the horizontal
+        float desired_angle = Mathf.Deg2Rad * Vector2.Angle(pred_2_fish_vect,horizontal_vect); //Vector2.Angle gives the smallest angle in degrees between two vectors.
+        if (pred_2_fish_vect.y < 0 ){
+            desired_angle = -desired_angle;
+        }
+
         //difussive coupling, where kp is the coupling strength. 
         Dis = Mathf.Sqrt( Mathf.Pow(targetFish.position.x - xo,2.0f) + Mathf.Pow(targetFish.position.y - yo,2.0f) );
        
@@ -222,24 +244,37 @@ public class predatorBehaviour : MonoBehaviour
         if (dealtDmg == 1){ //whenever we do damage, reset the blink animation after 2 seconds
             StartCoroutine (resetBlink(2f));
         }
+
+        //handling at which point the predator will backOff
+        float backOffDist = 2.78f;
+        if (Manager.flow == 1){
+            backOffDist = 2.68f;
+        }
+        if (Manager.instance.isTutorial){
+            backOffDist = 2.8f;
+        }
         
        if ( (Co_In< p_atk || (targetFishRP.theta0 > (Mathf.PI/2)) || (targetFishRP.theta0 < -(Mathf.PI/2))) && Flag_attack == 0.0f) //attack when 1. random chance 2. fish is swimming to the left
         {
           Debug.Log("Should Attack now");
           retreat_flag = false;
-          StartCoroutine(atk_timer(5f)); //4 seconds, if attack sequence doesnt finish, end it manually
+          coroutine = (atk_timer(3.5f)); //4 seconds, if attack sequence doesnt finish, end it manually
+          StartCoroutine(coroutine);
+
           u_atk = 0.0f; // Attack
           Flag_attack = 1.0f;
           randomNoise = NextGaussian3(1f,0.5f,-2f,2f);
         }
-        else if (Flag_attack==1.0f && (fishOffset <= 0.3f || retreat_flag == true)) //predator finishes attacking, now going back
+        //else if (Flag_attack==1.0f && (fishOffset <= 0.3f || retreat_flag == true)) //predator finishes attacking, now going back
+        else if (Flag_attack==1.0f && (pred_2_fish_vect.magnitude <= backOffDist || retreat_flag == true)) //predator finishes attacking, now going back
         {
+          StopCoroutine(coroutine);
           u_atk = 1.0f; // no attack
           dealtDmg = 0; //predator can deal dmg again
           retreat_flag = false;
         
         }
-       else if (Flag_attack==1.0f && u_atk == 1.0f && fishOffset >= (fishOffsetDefault-0.5f)) //fish back at default offset
+       else if (Flag_attack==1.0f && u_atk == 1.0f && fishOffset >= (fishOffsetDefault-3f)) //fish back at default offset
         {
           //targetFish.GetComponent<Animator>().Play("New State", 1);//stop the fish from blinkin
           retreat_flag = false;
@@ -249,6 +284,51 @@ public class predatorBehaviour : MonoBehaviour
         if ((!avoidFlag)){
             fishOffset_k1 = fishOffset + ( (fishOffsetDefault - relaxation_constant * fishOffset)*u_atk - convergence_rate * fishOffset * (1.0f-u_atk) ) *GameTime.deltaTime;
         }
+
+
+
+        UR_x =  -1*(Mathf.Pow(rockRadius,2))*(Mathf.Pow((xo-xa),2)-Mathf.Pow((yo-ya),2)) / Mathf.Pow((Mathf.Pow((xo-xa),2)+Mathf.Pow((yo-ya),2)),2);
+        UR_y =  2*(Mathf.Pow(rockRadius,2))*((xo-xa)*(yo-ya)) / Mathf.Pow((Mathf.Pow((xo-xa),2)+Mathf.Pow((yo-ya),2)),2);
+
+        t2 = getU(yo,Manager.instance.a, Manager.instance.b, Manager.instance.flow_variable);
+        t3 = -t2* Mathf.Sign(Mathf.Cos(theta0))*UR_x;
+        tt3 = t2*UR_y;    
+
+        if (kp_vanish){ //this condition is triggered when predator enters a rock's ObstacleProximity hitbox, THIS MODELS THE BEHAVIOUR AROUND THE 2.6f RADIUS, BUT WE HAVE TO IMPLEMENT SOMETHING TO HARD BOUNDARIES THE 2.6F RADIUS BECAUSE THE MODEL DOESNT WORK WHEN IT TOUCHES.      
+
+            xk_1 = xo + (t2+t3)*GameTime.deltaTime + vk*Mathf.Cos(theta0)*GameTime.deltaTime;
+            yk_1 = yo + Mathf.Sign(Mathf.Cos(theta0))*(tt3)*GameTime.deltaTime + vk*Mathf.Sin(theta0)*GameTime.deltaTime;
+
+            //implementation of border avoidance: If (xk_1, yk_1) results in the predator inside the rock, we FORCE PUSH the predator out
+            if (Mathf.Pow(xk_1-xa,2) + Mathf.Pow(yk_1-ya,2) <= Mathf.Pow(rockRadius,2)){
+                vk = 1.5f*vDefault;
+                xk_1 = xo + Mathf.Sign(xo-xa)*vk*GameTime.deltaTime;
+                yk_1 = yo + Mathf.Sign(yo-ya)*vk*GameTime.deltaTime;
+            }
+
+            //thetak_1 = theta0 + (-1f) * getdU(yo, a, flowVariable) * Mathf.Pow(Mathf.Cos(theta0), 2) * GameTime.deltaTime;
+            thetak_1 = theta0;
+
+        } else { //this is normal condition
+            /*
+            if (-1f*(t2+t3)> vk*Mathf.Cos(theta0) + kp*(targetFish.position.x - fishOffset - xo)) { //predator is stuck on the rock due to high flow
+                vk = vk + 0.5f;
+            } else {
+                vk = vDefault;
+            }*/
+            vk = vk - (vk - vDefault)*GameTime.deltaTime;
+            xk_1 = xo + (t2+t3)*GameTime.deltaTime + vk*Mathf.Cos(theta0)*GameTime.deltaTime + kp * (targetFish.position.x - fishOffset - xo) * GameTime.deltaTime;
+            yk_1 = yo + Mathf.Sign(Mathf.Cos(theta0))*(tt3)*GameTime.deltaTime + vk*Mathf.Sin(theta0)*GameTime.deltaTime + ((targetFish.position.y + randomNoise - yo) * GameTime.deltaTime);
+            thetak_1 = theta0 + (-1f * getdU(yo, a, flowVariable) * Mathf.Pow(Mathf.Cos(theta0), 2) * GameTime.deltaTime + kp * (desired_angle - theta0) * GameTime.deltaTime);
+            
+        }
+        //predator undulation
+       
+        //first, determine predator vk 
+        float fvk = vk + Mathf.Sqrt(Mathf.Pow(t2+t3+kp*(targetFish.position.x-fishOffset-xo), 2) + Mathf.Pow(Mathf.Sin(Mathf.Cos(theta0))*(tt3) + (targetFish.position.y+randomNoise-yo),2));
+        //predator half body length is 1.5
+        tf = ( (fvk/3f) + 1.39f * Mathf.Pow(1.5f,(2/3)) ) / (0.98f*(1.5f));
+        this.GetComponent<Animator>().SetFloat("speedVar",tf);
 
         //dx/GameTime.deltaTime = 8-(alpha*x) *input - alpha2 * x * (1-input), input is 0 or 1;
 
@@ -310,6 +390,7 @@ public class predatorBehaviour : MonoBehaviour
         }
         */
 
+        /*
         if (turnUp){
             if (thetak_1 >= Mathf.PI/4){
                 thetak_1 = theta0;
@@ -329,18 +410,43 @@ public class predatorBehaviour : MonoBehaviour
             xk_1 = xo + 3f* Mathf.Cos(thetak_1) * GameTime.deltaTime;
             yk_1 = yo + 3f* Mathf.Sin(thetak_1) * GameTime.deltaTime;
         } else {
-            xk_1 = xo + (getU(yo, a, b, flowVariable) * GameTime.deltaTime + kp * (targetFish.position.x - fishOffset - xo) * GameTime.deltaTime);
-            yk_1 = yo + ((targetFish.position.y + randomNoise - yo) * GameTime.deltaTime);
+            //angle adjustment prep
             Vector2 pred_2_fish_vect = new Vector2 (targetFish.position.x - xo, targetFish.position.y - yo);
             Vector2 horizontal_vect = new Vector2 (1,0); //unit vector on the horizontal
             float desired_angle = Mathf.Deg2Rad * Vector2.Angle(pred_2_fish_vect,horizontal_vect); //Vector2.Angle gives the smallest angle in degrees between two vectors.
             if (pred_2_fish_vect.y < 0 ){
                 desired_angle = -desired_angle;
             }
-            thetak_1 = theta0 + (-1f * 0.0f * getdU(yo, a, flowVariable) * Mathf.Pow(Mathf.Cos(theta0), 2) * GameTime.deltaTime + kp * (desired_angle - theta0) * GameTime.deltaTime);
+
+            UR_x =  -1*(Mathf.Pow(rockRadius,2))*(Mathf.Pow((xo-xa),2)-Mathf.Pow((yo-ya),2)) / Mathf.Pow((Mathf.Pow((xo-xa),2)+Mathf.Pow((yo-ya),2)),2);
+            UR_y =  2*(Mathf.Pow(rockRadius,2))*((xo-xa)*(yo-ya)) / Mathf.Pow((Mathf.Pow((xo-xa),2)+Mathf.Pow((yo-ya),2)),2);
+
+            t2 = getU(yo,Manager.instance.a, Manager.instance.b, Manager.instance.flow_variable);
+            t3 = -t2* Mathf.Sign(Mathf.Cos(theta0))*UR_x;
+            tt3 = t2*UR_y;    
+
+            if (kp_vanish){ //this condition is triggered when predator enters a rock's ObstacleProximity hitbox, THIS MODELS THE BEHAVIOUR AROUND THE 2.6f RADIUS, BUT WE HAVE TO IMPLEMENT SOMETHING TO HARD BOUNDARIES THE 2.6F RADIUS BECAUSE THE MODEL DOESNT WORK WHEN IT TOUCHES.      
+
+                xk_1 = xo + (t2+t3)*GameTime.deltaTime + 5.0f*Mathf.Cos(theta0)*GameTime.deltaTime;
+                yk_1 = yo + Mathf.Sign(Mathf.Cos(theta0))*(tt3)*GameTime.deltaTime + 5.0f*Mathf.Sin(theta0)*GameTime.deltaTime;
+                //thetak_1 = theta0 + (-1f) * getdU(yo, a, flowVariable) * Mathf.Pow(Mathf.Cos(theta0), 2) * GameTime.deltaTime;
+                thetak_1 = theta0;
+
+            } else { //this is normal condition
+
+                xk_1 = xo + (t2+t3)*GameTime.deltaTime + 3.0f*Mathf.Cos(theta0)*GameTime.deltaTime + kp * (targetFish.position.x - fishOffset - xo) * GameTime.deltaTime;
+                yk_1 = yo + Mathf.Sign(Mathf.Cos(theta0))*(tt3)*GameTime.deltaTime + 3.0f*Mathf.Sin(theta0)*GameTime.deltaTime + ((targetFish.position.y + randomNoise - yo) * GameTime.deltaTime);
+                thetak_1 = theta0 + (-1f * getdU(yo, a, flowVariable) * Mathf.Pow(Mathf.Cos(theta0), 2) * GameTime.deltaTime + kp * (desired_angle - theta0) * GameTime.deltaTime);
+                
+            }
+
+            //xk_1 = xo + (getU(yo, a, b, flowVariable) * GameTime.deltaTime + kp * (targetFish.position.x - fishOffset - xo) * GameTime.deltaTime);
+            //yk_1 = yo + ((targetFish.position.y + randomNoise - yo) * GameTime.deltaTime);
+
+            
             //thetak_1 = theta0 + (-1f * 0.0f * getdU(yo, a, flowVariable) * Mathf.Pow(Mathf.Cos(theta0), 2) * GameTime.deltaTime + kp * (targetFishRP.theta0 - theta0) * GameTime.deltaTime);
         }
-
+        */
 
         /*
         if (avoidFlagStrong){
@@ -389,15 +495,6 @@ public class predatorBehaviour : MonoBehaviour
 
         //thetak_1 = theta0 + (-1f * 0.0f * getdU(yo, a, flowVariable) * Mathf.Pow(Mathf.Cos(theta0), 2) * GameTime.deltaTime + kp * (targetFishRP.theta0 - theta0) * GameTime.deltaTime);
         
-
-//predator undulation
-       
-        //first, determine predator vk 
-        float vk = targetFishRP.vk + kp * Mathf.Pow(Mathf.Pow(targetFish.position.x-fishOffset-xo, 2)+Mathf.Pow(targetFish.position.y+randomNoise-yo,2),0.5f);
-        //predator half body length is 1.5
-        tf = ( (vk/3f) + 1.39f * Mathf.Pow(1.5f,(2/3)) ) / (0.98f*(1.5f));
-        this.GetComponent<Animator>().SetFloat("speedVar",tf);
-
 
         /*
         if (u_atk == 0){
@@ -455,6 +552,7 @@ public class predatorBehaviour : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        /*
         if (other.tag == "ObstacleOutside")
         {            
             //Debug.Log("predaotr hits rock sadge");
@@ -483,7 +581,12 @@ public class predatorBehaviour : MonoBehaviour
             {
                 theta0 = Mathf.Atan2(resultVector.x, resultVector.y);
             }
-            */
+            //////
+        }*/
+        if (other.tag == "ObstacleProximity"){
+            xa = other.transform.position.x;
+            ya = other.transform.position.y;
+            kp_vanish = true;
         }
 
     }
@@ -493,6 +596,11 @@ public class predatorBehaviour : MonoBehaviour
         if (other.tag == "ObstacleOutside")
         {
             avoidFlagStrong = false;
+        }
+
+        if(other.tag == "ObstacleProximity"){
+            kp_vanish = false;
+            fishOffset = targetFish.position.x - transform.position.x;
         }
     }
 

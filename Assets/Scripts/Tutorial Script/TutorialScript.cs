@@ -64,6 +64,7 @@ public class TutorialScript : MonoBehaviour
             RandomPatrol.instance.GetComponent<Animator>().Play("fish_with_bones_swim_v2");
             wave.GetComponent<Animation>().Play();
             RandomPatrol.instance.flowVariable = 1f;
+            Manager.instance.flow_variable = 1f;
 
         }
         if (tutorialStage == 2) {
@@ -92,7 +93,7 @@ public class TutorialScript : MonoBehaviour
         if (tutorialStage == 5) {
             rock1.SetActive(true);
             rock2.SetActive(true);
-            rock3.SetActive(true);
+            //rock3.SetActive(true);
             invisButton.SetActive(false);
             canTurn = true;
             canSwim = true;
@@ -119,9 +120,7 @@ public class TutorialScript : MonoBehaviour
 
             predator.SetActive(true);
 
-            if (RandomPatrol.instance.food <= 25){ //make sure user doesn't kill his fish in tutorial
-                RandomPatrol.instance.foodPenaltyAmount = 0.0f;
-            }
+
         }
         if (tutorialStage ==9) {
             invisButton.SetActive(true);
@@ -208,10 +207,10 @@ public class TutorialScript : MonoBehaviour
         "The fish loses fitness naturally with time, if it reaches zero, the game ends.\n<color=yellow>Click to continue.</color>",
         "Collecting food pellets that flow down stream recovers fitness.\n<color=yellow>To continue, collect food pellets until your food bar is full.</color>",
 
-        "Laying eggs have the potential to recover a large amount of fitness. You can press [enter] to lay eggs.\n<color=yellow>Go to one of the darker spots in the sand and Lay eggs to continue.</color>",
+        "Laying eggs have the potential to recover a large amount of fitness. Press [enter] to lay eggs.\n<color=yellow>Go to one of the darker spots in the sand and Lay eggs to continue.</color>",
         "Oops, it seems that the eggs failed to hatch this time.\n<color=yellow>Try again at a different spot.</color>",
-        "Watch out for the predator fish who attacks randomly.\nAvoid attacks to not lose fitness.\n<color=yellow>Avoid one atack to continue.</color>",
-        "That's it, you are all done.\nDo your best to keep that fitness bar and stay alive!\n<color=yellow>Click to finish tutorial.</color>"};
+        "Watch out for the predator fish who attacks randomly.\nAvoid attacks to not lose fitness.\n<color=yellow>Avoid one attack to continue.</color>",
+        "That's it, you are all done.\nDo your best to keep that fitness bar full and stay alive!\n<color=yellow>Click to finish tutorial.</color>"};
     }
     void Start()
     {
@@ -227,7 +226,7 @@ public class TutorialScript : MonoBehaviour
             nextStage();
         }
 */
-        if (RandomPatrol.instance.food <= 15){
+        if (RandomPatrol.instance.food <= 30){
             RandomPatrol.instance.food = 100;
         }
 
@@ -265,9 +264,9 @@ public class TutorialScript : MonoBehaviour
             attackReset = false;
             if (gotHit){
                 gotHit = false;
-                dialogText.text = "Ouch, the predator hit you this time, try to dodge its next attack by going up and down!";
+                dialogText.text = "Ouch, the predator hit you this time, try to dodge its next attack by going up and down or hiding around the rocks.";
             } else {
-                predatorBehaviour.instance.p_atk = 0.0f;
+                //predatorBehaviour.instance.p_atk = 0.0f;
                 nextStage();
             }
         }

@@ -59,28 +59,33 @@ public class rockSpawner : MonoBehaviour
 
         //put this rock somewhere on the scene
         a.transform.position = new Vector2(2f + Camera.main.transform.position.x + Camera.main.orthographicSize * Screen.width / Screen.height, Random.Range(-6f, 6f));
-        b.transform.position = new Vector2(5f + Camera.main.transform.position.x + Camera.main.orthographicSize * Screen.width / Screen.height, Random.Range(-6f, 6f));
-        if (foodAvail == 2){
-            GameObject c = Instantiate(foodPrefab) as GameObject;
+        b.transform.position = new Vector2(8f + Camera.main.transform.position.x + Camera.main.orthographicSize * Screen.width / Screen.height, Random.Range(-6f, 6f));
+        
+        if (foodAvail >= 2){
+            GameObject c = Instantiate(foodPrefab) as GameObject; 
             c.GetComponent<foodBehaviour>().a = flowA;
             c.GetComponent<foodBehaviour>().b = flowB;
             c.GetComponent<foodBehaviour>().y_boundary = y_boundary;
             c.GetComponent<foodBehaviour>().flowVariable = flowVariable;
-            c.transform.position = new Vector2(8f + Camera.main.transform.position.x + Camera.main.orthographicSize * Screen.width / Screen.height, Random.Range(-6f, 6f));
+            c.transform.position = new Vector2(16f + Camera.main.transform.position.x + Camera.main.orthographicSize * Screen.width / Screen.height, Random.Range(-6f, 6f));
         }
+
+        
         if (foodAvail == 3){
+            Debug.Log("THREE");
             GameObject d = Instantiate(foodPrefab) as GameObject;
             d.GetComponent<foodBehaviour>().a = flowA;
             d.GetComponent<foodBehaviour>().b = flowB;
             d.GetComponent<foodBehaviour>().y_boundary = y_boundary;
             d.GetComponent<foodBehaviour>().flowVariable = flowVariable;
-            d.transform.position = new Vector2(16f + Camera.main.transform.position.x + Camera.main.orthographicSize * Screen.width / Screen.height, Random.Range(-6f, 6f));
+            d.transform.position = new Vector2(5f + Camera.main.transform.position.x + Camera.main.orthographicSize * Screen.width / Screen.height, Random.Range(-6f, 6f));
         }
-        if ( STATIC.flowLevel != "h" || (Random.Range(0,100) <= 70)) { //if flow level is high, then the egg spot have a 70% chance of spawning per cycle instead of 100% per cycle
-            GameObject e = Instantiate(eggspotPrefab) as GameObject;
-            e.GetComponent<eggLaying>().fish = fishRef; //setting the reference to the fish after instantiation.
-            e.transform.position = new Vector2(10f + Camera.main.transform.position.x + Camera.main.orthographicSize * Screen.width / Screen.height, Random.Range(-6f, 6f));
-        }
+        
+        
+        GameObject e = Instantiate(eggspotPrefab) as GameObject;
+        e.GetComponent<eggLaying>().fish = fishRef; //setting the reference to the fish after instantiation.
+        e.transform.position = new Vector2(10f + Camera.main.transform.position.x + Camera.main.orthographicSize * Screen.width / Screen.height, Random.Range(-6f, 6f));
+    
 
     }
 

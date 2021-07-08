@@ -57,20 +57,20 @@ public class Manager : MonoBehaviour
         instance = this;
         GameTime.isPaused = false;
         //set up the values depending on varying levels 
-        table[0] = new float[]{0.5f,0.3f,0.1f,0.05f}; //rotate sens, level = 1 + 2*poll - 1*temp
-        table[1] = new float[]{9f,8f,7f,7f}; //speed sens, level = 1 + 2*poll - 1*temp
+        table[0] = new float[]{0.5f,0.3f,0.2f,0.1f}; //rotate sens, level = 1 + 2*poll - 1*temp
+        table[1] = new float[]{10f,9f,8f,7f}; //speed sens, level = 1 + 2*poll - 1*temp
         table[2] = new float[]{1f,2f};  //flow variable, level = 0 + 1*flow
         table[3] = new float[]{0.2f,0.25f,0.3f,0.35f,0.4f}; //food decrease speed, level = 0 + 1*poll + 2*temp + 1*flow
-        table[4] = new float[]{1f,2f,3f}; //food availability CURRENTLY NOT USED AND ALWAYS DEFAULTS TO 2
-        table[5] = new float[]{80f,60f}; //egg succ chance, level = 0 + 1*poll
+        table[4] = new float[]{1f,2f,3f}; //food availability, level = 1 + 1*flow
+        table[5] = new float[]{80f,60f,50f,40f}; //egg succ chance, level = 0 + 1*poll + 1*temp + 1*flow
         table[6] = new float[]{0.008f,0.01f,0.02f}; //predator avoidance AKA how often the predator attacks, level = 0 + 1*poll + 1*flow
 
         setup(1+2*poll-temp,
         1+2*poll-temp,
         0+flow,
         0+poll+2*temp+flow,
-        1,
-        0+poll,
+        1+flow,
+        0+poll+temp+flow,
         0+poll+flow);
 
         if (isTutorial){
