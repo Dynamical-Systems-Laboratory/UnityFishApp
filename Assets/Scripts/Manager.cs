@@ -25,7 +25,7 @@ public class Manager : MonoBehaviour
     //the listed values are their "normal value"
     public float rotate_sensitivity = 0.35f; //0.2 for low, 0.35 for normal, 0.5 for high
     public float speed_sensitivity = 10f; //5 for low, 10 for normal, 15 for high
-    public float flow_variable = 1f; //1.5 for low speed fish, 1 for normal speed fish, 0.5 for high speed fish
+    public float flow_variable = 1f; //2 for low speed fish and predator, 1 for normal speed fish
     public float food_decreaseSpeed = 0.1f; //0.05 for low, 0.1 for normal, 0.2 for high
     public float food_availability = 2; //1 for scarce, 2 is normal, 3 is plenty
     public float egg_successChance = 70f; //out of 100, the percentage for a laid egg to hatch.

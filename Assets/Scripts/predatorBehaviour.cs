@@ -148,6 +148,8 @@ public class predatorBehaviour : MonoBehaviour
     private float UR_x;
     private float UR_y;
     private bool kp_vanish = false;
+
+    private float attack_duration;
     
     private IEnumerator avoidRockDown(float secs)
     {
@@ -208,6 +210,11 @@ public class predatorBehaviour : MonoBehaviour
         b = manager.b;
         y_boundary = manager.y_boundary;
 
+        //if high flow, then predator converges slower, extend the attack max duration to compensate
+        convergence_rate = 1 / manager.flow_variable;
+        attack_duration = 3.5f;
+        if (manager.flow_variable > 1){attack_duration=4.2f;}
+
         vk = vDefault;
 
     }
@@ -258,7 +265,7 @@ public class predatorBehaviour : MonoBehaviour
         {
           Debug.Log("Should Attack now");
           retreat_flag = false;
-          coroutine = (atk_timer(3.5f)); //4 seconds, if attack sequence doesnt finish, end it manually
+          coroutine = (atk_timer(attack_duration)); //4 seconds, if attack sequence doesnt finish, end it manually
           StartCoroutine(coroutine);
 
           u_atk = 0.0f; // Attack
