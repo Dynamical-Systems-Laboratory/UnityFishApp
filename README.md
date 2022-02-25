@@ -12,8 +12,7 @@ The game is publicly available and different versions can be played in the links
   [Play Version 1.0](https://play.unity.com/mg/other/fish-sim-test)
   Password: DSL2021.
 
- - Game Version 2.0:  
-  [Play Version 2.0](https://play.unity.com/mg/other/fish-game-revisited)
+ - Game Version 2.0: [Play Version 2.0](https://play.unity.com/mg/other/fish-game-revisited)
   Password: DSL2022
 
 
