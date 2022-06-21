@@ -24,3 +24,7 @@ Below the links to the slides used in the experiment
 ## Data set
 
 -[Data.csv](https://github.com/Dynamical-Systems-Laboratory/UnityFishApp/files/8137054/Data.csv)
+
+## Video Tutorial
+
+- [Youtube](https://youtu.be/Cd_heKmUc1E)
