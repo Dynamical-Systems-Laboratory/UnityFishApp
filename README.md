@@ -10,15 +10,15 @@ The game is publicly available and different versions can be played in the links
 
 - Game Version 1.0: This version was used in the experiments. 
   [Play Version 1.0](https://play.unity.com/mg/other/fish-sim-test)
-  Password: DSL2021. This version is an update of the previous one but it was not used on the experiments
+  Password: DSL2021. 
 
  - Game Version 2.0: [Play Version 2.0](https://play.unity.com/mg/other/fish-game-revisited)
-  Password: DSL2022
+  Password: DSL2022. This version is an update of the previous one but it was not used on the experiments
 
 
 ## Slides
 Below the links to the slides used in the experiment
-- [Slides_Version_1.pdf](https://github.com/Dynamical-Systems-Laboratory/UnityFishApp/files/8137030/Slides_Version_1.pdf) This is the first version which was used in the experiments
+- [Slides_Version_1.pdf](https://github.com/Dynamical-Systems-Laboratory/UnityFishApp/files/8137030/Slides_Version_1.pdf) This version was used in the experiments.
 - [Slides_Version_2.pdf](https://github.com/Dynamical-Systems-Laboratory/UnityFishApp/files/8137031/Slides_Version_2.pdf) This is a revised version of the previous slides but it was not used in the experiments.
 
 ## Data set
