@@ -19,7 +19,7 @@ The game is publicly available and different versions can be played in the links
 ## Slides
 Below the links to the slides used in the experiment
 - [Slides_Version_1.pdf](https://github.com/Dynamical-Systems-Laboratory/UnityFishApp/files/8137030/Slides_Version_1.pdf) This is the first version which was used in the experiments
-- [Slides_Version_2.pdf](https://github.com/Dynamical-Systems-Laboratory/UnityFishApp/files/8137031/Slides_Version_2.pdf) This version is a revised version of the previous slides but it was not used in the experiments.
+- [Slides_Version_2.pdf](https://github.com/Dynamical-Systems-Laboratory/UnityFishApp/files/8137031/Slides_Version_2.pdf) This is a revised version of the previous slides but it was not used in the experiments.
 
 ## Data set
 
