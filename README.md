@@ -8,9 +8,9 @@ Unity based fish game to teach middle-school students about human impacts on fre
 
 The game is publicly available and different versions can be played in the links below using their respective passwords
 
-- Game Version 1.0: This version was used in the experiments. 
+- Game Version 1.0: 
   [Play Version 1.0](https://play.unity.com/mg/other/fish-sim-test)
-  Password: DSL2021. 
+  Password: DSL2021. This version was used in the experiments. 
 
  - Game Version 2.0: [Play Version 2.0](https://play.unity.com/mg/other/fish-game-revisited)
   Password: DSL2022. This version is an update of the previous one but it was not used on the experiments
